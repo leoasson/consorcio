@@ -21,7 +21,7 @@ public final class SearchEgress extends javax.swing.JInternalFrame {
     AuxiliaryFunctions af = new AuxiliaryFunctions();
     main main;
     private Object[][] tableDate; 
-    String[] column = {"Id egreso", "Fecha","Concepto", "Importe"};
+    String[] column = {"Id egreso", "Fecha","Concepto", "Rubro", "Importe"};
     Object[] channel;
     Object[] name;
     int state = 0;
@@ -39,25 +39,12 @@ public final class SearchEgress extends javax.swing.JInternalFrame {
     
 public void init ()
 {
-        initComponents();
-        comboYear.setEnabled(false);
-        comboMonth.setEnabled(false);
-        filterTable();
-//        this.ActListener = new PropertyChangeListener() {
-//            @Override
-//            public void propertyChange(PropertyChangeEvent pce) {
-//                if(count < 0)
-//                {
-//                filterTable();
-//                }
-//                count --;
-//            }     
-//    };
-//        
-//        comboMonth.addPropertyChangeListener(ActListener);
-//        comboYear.addPropertyChangeListener(ActListener);
+    initComponents();
+    comboYear.setEnabled(false);
+    comboMonth.setEnabled(false);
+    filterTable();
         
-        tableEgress.addMouseListener(new MouseAdapter() 
+    tableEgress.addMouseListener(new MouseAdapter() 
     {
         @Override
         public void mousePressed(MouseEvent mouseEvent) 
@@ -104,7 +91,8 @@ public void init ()
         tableEgress.getColumnModel().getColumn(2).setMaxWidth(600);
         tableEgress.getColumnModel().getColumn(3).setPreferredWidth(120);
         tableEgress.getColumnModel().getColumn(3).setMaxWidth(130);
-
+        tableEgress.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tableEgress.getColumnModel().getColumn(4).setMaxWidth(130);
     }
     
     private void setTitletable(boolean[] filter)
@@ -337,13 +325,13 @@ public void init ()
         int year = comboYear.getYear();
 
         if(boxMonth.isSelected())
-            data = af.getTemporalDetailedEgress(" where YEAR(fecha) = '"+ year +"' and MONTH(fecha) = '"+month+"'");
+            data = af.getTemporalDetailedEgress(" where YEAR(fecha) = '"+ year +"' and MONTH(fecha) = '"+month+"' ORDER BY fecha DESC");
         else if(boxYear.isSelected() && !boxMonth.isSelected()) 
-            data = af.getTemporalDetailedEgress(" where YEAR(fecha) = '"+ year +"'");
+            data = af.getTemporalDetailedEgress(" where YEAR(fecha) = '"+ year +"' ORDER BY fecha DESC");
         else
-            data = af.getTemporalDetailedEgress("");
+            data = af.getTemporalDetailedEgress(" ORDER BY fecha DESC");
 
-        String [] columns = {"Id egresso", "Fecha","Concepto", "Modalidad", "Detalle", "Importe"};
+        String [] columns = {"Id egresso", "Fecha","Concepto", "Rubro","Modalidad", "Detalle", "Importe"};
         SaveExcelFile file = new SaveExcelFile(title+"-"+af.getActualDateInString());
         GenerateXls xls = new GenerateXls(data, columns, title, 2);
         String route = file.getRoute();

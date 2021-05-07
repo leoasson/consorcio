@@ -188,7 +188,7 @@ public class GenerateXls
             else if (i == column.length-1)
             {
                 celd.setCellType(Cell.CELL_TYPE_FORMULA);
-                String strFormula = "SUM(F3:F"+celda+")";
+                String strFormula = "SUM(G3:G"+celda+")";
                 celd.setCellFormula(strFormula);
             }
         }
@@ -196,19 +196,9 @@ public class GenerateXls
         sheet.addMergedRegion(cellRangeAddress);
     }
     
-    
-    
     private void insertTotalForPayments(int celda)
-    {    
-        Row fila = sheet.createRow(celda);
-        //suma de totales
-        Row fila2 = sheet.createRow(celda+1);
-        
-        Cell celd1 = fila2.createCell(column.length-2);
-        Cell celd2 = fila2.createCell(column.length-1);
-        celd2.setCellStyle(style3);
-        celd1.setCellStyle(style3);
-        
+    {
+                Row fila = sheet.createRow(celda);
         for(int i = 0; i < column.length; i++)
         {
             Cell celd = fila.createCell(i);
@@ -217,32 +207,17 @@ public class GenerateXls
             {
                 celd.setCellValue("Total");
             }
-            else if (i == column.length-2)
-            {
-                celd.setCellType(Cell.CELL_TYPE_FORMULA);
-                String strFormula = "SUM(I2:I"+celda+")";
-                celd.setCellFormula(strFormula);
-                
-            }
             else if (i == column.length-1)
             {
                 celd.setCellType(Cell.CELL_TYPE_FORMULA);
-                String strFormula = "SUM(J2:J"+celda+")";
+                String strFormula = "SUM(F3:F"+celda+")";
                 celd.setCellFormula(strFormula);
             }
         }
-        CellRangeAddress cellRangeAddress = new CellRangeAddress(celda,celda,0,column.length-3);
+        CellRangeAddress cellRangeAddress = new CellRangeAddress(celda,celda,0,column.length-2);
         sheet.addMergedRegion(cellRangeAddress);
-        
-        
-        String strFormulaTotal = "SUM(I"+(celda+1)+":J"+(celda+1)+")";
-        celd1.setCellFormula(strFormulaTotal);
-        
-        CellRangeAddress cellRangeAddress2 = new CellRangeAddress(celda+1,celda+1,column.length-2,column.length-1);
-        sheet.addMergedRegion(cellRangeAddress2);
-        
     }
-    
+        
     private void generateDocument(String route)
     {
         try 

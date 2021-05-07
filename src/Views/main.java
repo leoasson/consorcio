@@ -362,6 +362,7 @@ public class main extends javax.swing.JFrame {
         registerEgress2 = new javax.swing.JMenuItem();
         listEgress2 = new javax.swing.JMenuItem();
         jSeparator13 = new javax.swing.JPopupMenu.Separator();
+        add_rubro = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CoriSur");
@@ -760,6 +761,15 @@ public class main extends javax.swing.JFrame {
         menuActivity2.add(listEgress2);
         menuActivity2.add(jSeparator13);
 
+        add_rubro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/outMoney16.png"))); // NOI18N
+        add_rubro.setText("Agregar rubro ");
+        add_rubro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                add_rubroActionPerformed(evt);
+            }
+        });
+        menuActivity2.add(add_rubro);
+
         jMenuBar1.add(menuActivity2);
 
         setJMenuBar(jMenuBar1);
@@ -1020,6 +1030,12 @@ public class main extends javax.swing.JFrame {
         jDesktopPane1.add(egress);
         egress.show();
     }//GEN-LAST:event_listEgress2ActionPerformed
+
+    private void add_rubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_rubroActionPerformed
+        AddRubro newRubro  = new AddRubro(this);
+        jDesktopPane1.add(newRubro);
+        newRubro.show();
+    }//GEN-LAST:event_add_rubroActionPerformed
   
     /**
      * @param args the command line argum
@@ -1052,6 +1068,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton ButtonNewIngress;
     private javax.swing.JMenu LesseeMenu;
     private javax.swing.JMenuItem ListCensus;
+    private javax.swing.JMenuItem add_rubro;
     private javax.swing.JMenuItem associateLesseeCensus;
     private javax.swing.JButton buttonDebt;
     private javax.swing.JButton buttonGenerateCedulones;

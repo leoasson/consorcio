@@ -47,7 +47,7 @@ public void init ()
     comboYear.setEnabled(false);
     comboMonth.setEnabled(false);
     filterTable();
-    
+        
 //    this.ActListener = new PropertyChangeListener() {
 //        @Override
 //        public void propertyChange(PropertyChangeEvent pce) {
@@ -402,7 +402,7 @@ public void init ()
         
         String [] columns = {"Id ingreso", "Fecha", "Concepto", "Modalidad", "Detalle", "Importe"};
         SaveExcelFile file = new SaveExcelFile(title+"-"+af.getActualDateInString());
-        GenerateXls xls = new GenerateXls(data, columns, title, 2);
+        GenerateXls xls = new GenerateXls(data, columns, title, 1);
         String route = file.getRoute();
         if(route != null)
         {

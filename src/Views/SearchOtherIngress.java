@@ -20,7 +20,7 @@ public final class SearchOtherIngress extends javax.swing.JInternalFrame {
     AuxiliaryFunctions af = new AuxiliaryFunctions();
     Object [][] payments;
     private Object[][] tableDate; 
-    String[] column = {"Id ingreso", "Fecha","Concepto", "Importe"};
+    String[] column = {"Id ingreso", "Fecha","Concepto", "Rubro","Importe"};
     String title_;
     main main;
     int state = 0;
@@ -88,7 +88,9 @@ public void init ()
         tableIngress.getColumnModel().getColumn(2).setPreferredWidth(500);
         tableIngress.getColumnModel().getColumn(2).setMaxWidth(600);
         tableIngress.getColumnModel().getColumn(3).setPreferredWidth(120);
-        tableIngress.getColumnModel().getColumn(3).setMaxWidth(130);
+        tableIngress.getColumnModel().getColumn(3).setMaxWidth(130);        
+        tableIngress.getColumnModel().getColumn(4).setPreferredWidth(120);
+        tableIngress.getColumnModel().getColumn(4).setMaxWidth(130);
     }
     
     private void setTitletable(boolean[] filter)
@@ -148,7 +150,7 @@ public void init ()
         buttonGenerateExcel = new javax.swing.JButton();
         comboYear = new com.toedter.calendar.JYearChooser();
         buttonDelete = new javax.swing.JButton();
-        buttonDelete1 = new javax.swing.JButton();
+        buttonPrint = new javax.swing.JButton();
 
         setTitle("Listar otro tipo de ingresos");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/listIncome16.png"))); // NOI18N
@@ -214,10 +216,10 @@ public void init ()
             }
         });
 
-        buttonDelete1.setText("Imrpimir comprobante");
-        buttonDelete1.addActionListener(new java.awt.event.ActionListener() {
+        buttonPrint.setText("Imrpimir comprobante");
+        buttonPrint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDelete1ActionPerformed(evt);
+                buttonPrintActionPerformed(evt);
             }
         });
 
@@ -231,7 +233,7 @@ public void init ()
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(buttonDelete1)
+                        .addComponent(buttonPrint)
                         .addGap(18, 18, 18)
                         .addComponent(buttonDelete)
                         .addGap(18, 18, 18)
@@ -284,7 +286,7 @@ public void init ()
                     .addComponent(buttonModify)
                     .addComponent(buttonGenerateExcel)
                     .addComponent(buttonDelete)
-                    .addComponent(buttonDelete1))
+                    .addComponent(buttonPrint))
                 .addContainerGap())
         );
 
@@ -356,7 +358,7 @@ public void init ()
         else
             data = af.getDetailedOtherIngress(" ORDER BY fecha DESC");
         
-        String [] columns = {"Id ingreso", "Fecha", "Concepto", "Modalidad", "Detalle", "Importe"};
+        String [] columns = {"Id ingreso", "Fecha", "Concepto", "Rubro", "Modalidad", "Detalle", "Importe"};
         SaveExcelFile file = new SaveExcelFile(title_+"-"+af.getActualDateInString());
         GenerateXls xls = new GenerateXls(data, columns, title_, 2);
         String route = file.getRoute();
@@ -382,7 +384,7 @@ public void init ()
         }
     }//GEN-LAST:event_buttonDeleteActionPerformed
 
-    private void buttonDelete1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDelete1ActionPerformed
+    private void buttonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrintActionPerformed
         int row = tableIngress.getSelectedRow();
         if(row < 0)
         {
@@ -393,21 +395,21 @@ public void init ()
         String id =(String) tableIngress.getValueAt(rowClicked, 0);
         String date = (String) tableIngress.getValueAt(rowClicked, 1);
         String concept = (String) tableIngress.getValueAt(rowClicked, 2);
-        String total = (String) tableIngress.getValueAt(rowClicked, 3);
+        String total = (String) tableIngress.getValueAt(rowClicked, 4);
         
         PrintVoucher print = new PrintVoucher(id,date,concept,total,1);
         print.dispose();
-    }//GEN-LAST:event_buttonDelete1ActionPerformed
+    }//GEN-LAST:event_buttonPrintActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
     private javax.swing.JCheckBox boxMonth;
     private javax.swing.JCheckBox boxYear;
     private javax.swing.JButton buttonDelete;
-    private javax.swing.JButton buttonDelete1;
     private javax.swing.JButton buttonFilter;
     private javax.swing.JButton buttonGenerateExcel;
     private javax.swing.JButton buttonModify;
+    private javax.swing.JButton buttonPrint;
     private com.toedter.calendar.JMonthChooser comboMonth;
     private com.toedter.calendar.JYearChooser comboYear;
     private javax.swing.JLabel jLabel1;

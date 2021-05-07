@@ -107,6 +107,11 @@ public String getActualDateInString ()
         return senSql.datos_string("concepto", "select concepto from "+nameOfTable+" where "+column+" ='"+id+"';");
     }
     
+    public String getRubroForIngressOrEgress(String id, String nameOfTable, String column)
+    {
+        return senSql.datos_string("rubro", "select rubro from "+nameOfTable+" LEFT JOIN rubro ON cod_rubro = id_rubro where "+column+" ='"+id+"';");
+    }
+    
     public Date getDateFromIngressOrEgress(String id_ingressOrEgress, String nameOfTable, String column)
     {
         return getDate(senSql.datos_string("fecha","select fecha from "+nameOfTable+" where "+column+" ='"+id_ingressOrEgress+"';"));
@@ -192,9 +197,9 @@ public String getActualDateInString ()
     
     public Object[][] temporalGetEgress(String where)
     {
-        String tableAux = "(SELECT id_egreso,fecha, concepto, SUM(importe) as importe FROM `pruebaegreso` LEFT JOIN `egrmod` ON pruebaegreso.id_egreso = egrmod.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmod.cod_operacion GROUP BY id_egreso) as egress";
+        String tableAux = "(SELECT id_egreso,fecha, concepto, rubro, SUM(importe) as importe FROM `pruebaegreso` LEFT JOIN `rubro` ON pruebaegreso.cod_rubro = rubro.id_rubro LEFT JOIN `egrmod` ON pruebaegreso.id_egreso = egrmod.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmod.cod_operacion GROUP BY id_egreso) as egress";
         String consult = " FROM " + tableAux;
-        String[] columnas={"id_egreso", "fecha", "concepto", "importe"};
+        String[] columnas={"id_egreso", "fecha", "concepto", "rubro", "importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
@@ -210,26 +215,26 @@ public String getActualDateInString ()
     
     public Object[][] getOtherIngress(String where)
     {
-        String tableAux = "(SELECT id_ingreso,fecha, concepto, SUM(importe) as importe FROM `otrosingresos` LEFT JOIN `ingmodblack` ON otrosingresos.id_ingreso = ingmodblack.cod_ingreso LEFT JOIN `operacion` ON operacion.id_operacion = ingmodblack.cod_operacion GROUP BY id_ingreso) as ingress";
+        String tableAux = "(SELECT id_ingreso,fecha, concepto, rubro, SUM(importe) as importe FROM `otrosingresos` LEFT JOIN `rubro` ON otrosingresos.cod_rubro = rubro.id_rubro LEFT JOIN `ingmodblack` ON otrosingresos.id_ingreso = ingmodblack.cod_ingreso LEFT JOIN `operacion` ON operacion.id_operacion = ingmodblack.cod_operacion GROUP BY id_ingreso) as ingress";
         String consult = " FROM " + tableAux;
-        String[] columnas={"id_ingreso", "fecha", "concepto", "importe"};
+        String[] columnas={"id_ingreso", "fecha", "concepto", "rubro", "importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
     
     public Object[][] getOtherEgress(String where)
     {
-        String tableAux = "(SELECT id_egreso,fecha, concepto, SUM(importe) as importe FROM `otrosegresos` LEFT JOIN `egrmodblack` ON otrosegresos.id_egreso = egrmodblack.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmodblack.cod_operacion GROUP BY id_egreso) as egress";
+        String tableAux = "(SELECT id_egreso,fecha, concepto, rubro, SUM(importe) as importe FROM `otrosegresos` LEFT JOIN `rubro` ON otrosegresos.cod_rubro = rubro.id_rubro LEFT JOIN `egrmodblack` ON otrosegresos.id_egreso = egrmodblack.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmodblack.cod_operacion GROUP BY id_egreso) as egress";
         String consult = " FROM " + tableAux;
-        String[] columnas={"id_egreso", "fecha", "concepto", "importe"};
+        String[] columnas={"id_egreso", "fecha", "concepto", "rubro", "importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
     
     public Object[][] getTemporalDetailedEgress(String where)
     {
-        String consult = " from (SELECT * FROM `pruebaegreso` LEFT JOIN `egrmod` ON pruebaegreso.id_egreso = egrmod.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmod.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as egress " ;
-        String[] columnas={"egress.id_egreso", "egress.fecha", "egress.concepto", "egress.modalidad","egress.detalle", "egress.importe"};
+        String consult = " from (SELECT * FROM `pruebaegreso` LEFT JOIN `rubro` ON pruebaegreso.cod_rubro = rubro.id_rubro LEFT JOIN `egrmod` ON pruebaegreso.id_egreso = egrmod.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmod.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as egress " ;
+        String[] columnas={"egress.id_egreso", "egress.fecha", "egress.concepto", "egress.rubro", "egress.modalidad","egress.detalle", "egress.importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
@@ -244,23 +249,23 @@ public String getActualDateInString ()
     
     public Object[][] getDetailedOtherIngress(String where)
     {
-        String consult = " from (SELECT * FROM `otrosingresos` LEFT JOIN `ingmodblack` ON otrosingresos.id_ingreso = ingmodblack.cod_ingreso LEFT JOIN `operacion` ON operacion.id_operacion = ingmodblack.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as ingress " ;
-        String[] columnas={"ingress.id_ingreso", "ingress.fecha", "ingress.concepto", "ingress.modalidad","ingress.detalle", "ingress.importe"};
+        String consult = " from (SELECT * FROM `otrosingresos` LEFT JOIN `rubro` ON otrosingresos.cod_rubro = rubro.id_rubro LEFT JOIN `ingmodblack` ON otrosingresos.id_ingreso = ingmodblack.cod_ingreso LEFT JOIN `operacion` ON operacion.id_operacion = ingmodblack.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as ingress " ;
+        String[] columnas={"ingress.id_ingreso", "ingress.fecha", "ingress.concepto", "ingress.rubro", "ingress.modalidad","ingress.detalle", "ingress.importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
     
     public Object[][] getDetailedOtherEgress(String where)
     {
-        String consult = " from (SELECT * FROM `otrosegresos` LEFT JOIN `egrmodblack` ON otrosegresos.id_egreso = egrmodblack.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmodblack.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as egress " ;
-        String[] columnas={"egress.id_egreso", "egress.fecha", "egress.concepto", "egress.modalidad","egress.detalle", "egress.importe"};
+        String consult = " from (SELECT * FROM `otrosegresos` LEFT JOIN `rubro` ON otrosegresos.cod_rubro = rubro.id_rubro LEFT JOIN `egrmodblack` ON otrosegresos.id_egreso = egrmodblack.cod_egreso LEFT JOIN `operacion` ON operacion.id_operacion = egrmodblack.cod_operacion LEFT JOIN `modalidad` ON modalidad.id_modalidad = operacion.cod_modalidad) as egress " ;
+        String[] columnas={"egress.id_egreso", "egress.fecha", "egress.concepto", "egress.rubro", "egress.modalidad","egress.detalle", "egress.importe"};
         Object[][] datos = senSql.GetTable(columnas,consult, where);
         return datos;
     }
     
     public Object[][] getEgress(String where)
     {
-        String[] columnas={"id_egreso", "fecha", "concepto", "medio", "detallePago", "total"};
+        String[] columnas={"id_egreso", "fecha", "concepto", "rubro", "medio", "detallePago", "total"};
         Object[][] datos = senSql.GetTable(columnas, " from egreso "  , where);
         return datos;
     }
@@ -590,25 +595,31 @@ public String getActualDateInString ()
                 return -1;
     }
     
+    public boolean insertRubro(String rubro)
+    {
+        String datos[] = {rubro};
+        return senSql.insert(datos, "insert into `rubro`(`rubro`) values(?)");    
+    }
+    
     public boolean inserSimpleIngress(String date, String cod_cedulon, String concept, String paymentMethod, String DetailPayment, String total)
     {
-            String datos[] = {date, cod_cedulon, concept, paymentMethod, DetailPayment, total};
-            return senSql.insert(datos, "insert into `ingreso`(`fecha`, `cod_cedulon`, `concepto`, `medio`, `detallePago`, `total2`) values(?,?,?,?,?,?)");
+        String datos[] = {date, cod_cedulon, concept, paymentMethod, DetailPayment, total};
+        return senSql.insert(datos, "insert into `ingreso`(`fecha`, `cod_cedulon`, `concepto`, `medio`, `detallePago`, `total2`) values(?,?,?,?,?,?)");
     }
    
-    public int temporalInsertEgress(String date, String concept)
+    public int temporalInsertEgress(String date, String concept, String cod_rubro)
     {
-        String datos[] = {date, concept};
-        if(senSql.insert(datos, "insert into `pruebaegreso`(`fecha`, `concepto`) values(?,?)"))
+        String datos[] = {date, concept, cod_rubro};
+        if(senSql.insert(datos, "insert into `pruebaegreso`(`fecha`, `concepto`, `cod_rubro`) values(?,?,?)"))
             return senSql.ReturnId("pruebaegreso","id_egreso");
         else
             return -1;
     }
     
-    public boolean temporalInsertEgress(String id, String date, String concept)
+    public boolean temporalInsertEgress(String id, String date, String concept, String cod_rubro)
     {
-        String datos[] = {id, date, concept};
-        return senSql.insert(datos, "insert into `pruebaegreso`(`id_egreso`, `fecha`, `concepto`) values(?,?,?)");
+        String datos[] = {id, date, concept, cod_rubro};
+        return senSql.insert(datos, "insert into `pruebaegreso`(`id_egreso`, `fecha`, `concepto`, `cod_rubro`) values(?,?,?,?)");
     }
     
     public int temporalInsertIngress(String date, String concept)
@@ -626,34 +637,34 @@ public String getActualDateInString ()
         return senSql.insert(datos, "insert into `pruebaingreso`(`id_ingreso`, `fecha`, `concepto`) values(?,?,?)");
     }
     
-    public int InsertOtherIngress(String date, String concept)
+    public int InsertOtherIngress(String date, String concept, String cod_rubro)
     {
-        String datos[] = {date, concept};
-        if(senSql.insert(datos, "insert into `otrosingresos`(`fecha`, `concepto`) values(?,?)"))
+        String datos[] = {date, concept, cod_rubro};
+        if(senSql.insert(datos, "insert into `otrosingresos`(`fecha`, `concepto`, `cod_rubro`) values(?,?,?)"))
             return senSql.ReturnId("otrosingresos","id_ingreso");
         else
             return -1;
     }
     
-    public boolean InsertOtherIngress(String id, String date, String concept)
+    public boolean InsertOtherIngress(String id, String date, String concept, String cod_rubro)
     {
-        String datos[] = {id, date, concept};
-        return senSql.insert(datos, "insert into `otrosingresos`(`id_ingreso`, `fecha`, `concepto`) values(?,?,?)");
+        String datos[] = {id, date, concept, cod_rubro};
+        return senSql.insert(datos, "insert into `otrosingresos`(`id_ingreso`, `fecha`, `concepto`, `cod_rubro`) values(?,?,?,?)");
     }
     
-    public int InsertOtherEgress(String date, String concept)
+    public int InsertOtherEgress(String date, String concept, String cod_rubro)
     {
-        String datos[] = {date, concept};
-        if(senSql.insert(datos, "insert into `otrosegresos`(`fecha`, `concepto`) values(?,?)"))
+        String datos[] = {date, concept, cod_rubro};
+        if(senSql.insert(datos, "insert into `otrosegresos`(`fecha`, `concepto`, `cod_rubro`) values(?,?,?)"))
             return senSql.ReturnId("otrosegresos","id_egreso");
         else
             return -1;
     }
     
-    public boolean InsertOtherEgress(String id, String date, String concept)
+    public boolean InsertOtherEgress(String id, String date, String concept, String cod_rubro)
     {
-        String datos[] = {id, date, concept};
-        return senSql.insert(datos, "insert into `otrosegresos`(`id_egreso`, `fecha`, `concepto`) values(?,?,?)");
+        String datos[] = {id, date, concept, cod_rubro};
+        return senSql.insert(datos, "insert into `otrosegresos`(`id_egreso`, `fecha`, `concepto`, `cod_rubro`) values(?,?,?,?)");
     }
     
     
@@ -837,6 +848,11 @@ public String getActualDateInString ()
     public String parseCity(String city)
     {
     return senSql.datos_string("id_ciudad", "select id_ciudad from ciudad where nombreCiudad='"+city+"';");
+    }
+    
+    public String parseRubro(String rubro)
+    {
+    return senSql.datos_string("id_rubro", "select id_rubro from rubro where rubro='"+rubro+"';");
     }
     
     public String parseLessee(String lessee)

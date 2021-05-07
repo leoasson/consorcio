@@ -12,7 +12,7 @@ package consorcio;
 public class convertEgress {
 AuxiliaryFunctions af = new AuxiliaryFunctions();
 Object [][] totalEgress;
-String fecha, concepto, medio, detallePago, total;
+String fecha, concepto,rubro, medio, detallePago, total;
 
 public convertEgress()
 {
@@ -25,10 +25,11 @@ public void walkArray()
     {
         fecha = (String) egress[1];
         concepto = (String) egress[2];
-        medio = (String) egress[3];
-        detallePago = (String) egress[4];
+        rubro = (String) egress[3];
+        medio = (String) egress[4];
+        detallePago = (String) egress[5];
         if (detallePago == null){detallePago="";}
-        total = (String) egress[5];
+        total = (String) egress[6];
         setModality();
         verify();
     }
@@ -50,7 +51,7 @@ private void setModality()
 private void verify()
 {
         //agrego el egreso.
-        int id_egress = af.temporalInsertEgress(fecha, concepto);
+        int id_egress = af.temporalInsertEgress(fecha, concepto, rubro);
         //Registro la operacion
         int id_operation = af.inserPayment1(medio, detallePago , total);
         //asocio ambos el ingreso y la operacion.

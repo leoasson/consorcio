@@ -23,6 +23,7 @@ public final class SimpleEgressOrIngress extends javax.swing.JInternalFrame {
     String cod_egressOrIngress;
     String id_ingressOrEgress;//se asigna el id del ingreso/egreso en caso de modificacion
     String concept;//se asigna el concepto del ingreso/egreso en caso de modificacion
+    String rubro;//se asigna el rubro del ingreso/egreso en caso de modificacion
     int type; //si es 1 es un ingreso si es 2 es un egreso.
     Object [][] payments;
     ArrayList<String> arrayIdsOps = new ArrayList<>();
@@ -55,7 +56,9 @@ public SimpleEgressOrIngress(main main, String id, SearchIngress temporalSearchI
     payments = af.getPaymentForModifyIngressOrEgress("LEFT JOIN `modalidad` ON `id_modalidad` = `cod_modalidad` LEFT JOIN `ingmod` ON `id_operacion` = `cod_operacion` WHERE `cod_ingreso`= '"+id_ingressOrEgress+"'");
     DateOfPay.setDate(af.getDateFromIngressOrEgress(id_ingressOrEgress, "pruebaingreso", "id_ingreso"));
     concept= af.getConceptForIngressOrEgress(id_ingressOrEgress, "pruebaingreso", "id_ingreso");
+    rubro = af.getRubroForIngressOrEgress(id_ingressOrEgress, "pruebaingreso", "id_ingreso");
     fieldConcept.setText(concept);
+    comboRubro.setSelectedItem(rubro);
     completeTablePaymentForModified();
 
 }
@@ -73,7 +76,9 @@ public SimpleEgressOrIngress(main main, String id, SearchEgress temporalSearchEg
     payments = af.getPaymentForModifyIngressOrEgress("LEFT JOIN `modalidad` ON `id_modalidad` = `cod_modalidad` LEFT JOIN `egrmod` ON `id_operacion` = `cod_operacion` WHERE `cod_egreso`= '"+id_ingressOrEgress+"'");
     DateOfPay.setDate(af.getDateFromIngressOrEgress(id_ingressOrEgress, "pruebaegreso", "id_egreso"));
     concept= af.getConceptForIngressOrEgress(id_ingressOrEgress, "pruebaegreso", "id_egreso");
+    rubro = af.getRubroForIngressOrEgress(id_ingressOrEgress, "pruebaegreso", "id_egreso");
     fieldConcept.setText(concept);
+    comboRubro.setSelectedItem(rubro);
     completeTablePaymentForModified();
 }
     
@@ -82,6 +87,7 @@ private void init()
     fieldTotalPayment.setEditable(false);
     DateOfPay.setDate(af.getActualDate());
     modelPayment = (DefaultTableModel) tablePayment.getModel();
+    completeComboRubro();
     tablePayment.addMouseListener(new MouseAdapter() {
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
@@ -101,9 +107,21 @@ private void init()
     if (type == 1)
     {
     this.setTitle("Registrar ingreso");
+    comboRubro.setEnabled(false);
     }
 }
-    
+
+public void completeComboRubro()
+    {
+        Object [] rubros = af.combox("rubro", "rubro");
+        comboRubro.removeAllItems();
+        for (Object rubro : rubros) 
+        {
+            comboRubro.addItem(rubro.toString());
+        }   
+        comboRubro.setSelectedItem(null);
+    }
+
 public void insertNewPaymentInView(String type, String total, String detail)
 {
     finalTotalPayment = finalTotalPayment + Double.valueOf(total);
@@ -179,7 +197,7 @@ private boolean registerEgressInBD()
 {
     if(isModified)
     {
-        if(af.temporalInsertEgress(id_ingressOrEgress, af.getDateToString(DateOfPay.getDate()), fieldConcept.getText()))
+        if(af.temporalInsertEgress(id_ingressOrEgress, af.getDateToString(DateOfPay.getDate()), fieldConcept.getText(), af.parseRubro(comboRubro.getSelectedItem().toString())))
         {
             cod_egressOrIngress = id_ingressOrEgress;
             return true;
@@ -192,7 +210,7 @@ private boolean registerEgressInBD()
     }
     else
     {
-        int id_ = af.temporalInsertEgress(af.getDateToString(DateOfPay.getDate()), fieldConcept.getText());
+        int id_ = af.temporalInsertEgress(af.getDateToString(DateOfPay.getDate()), fieldConcept.getText(), af.parseRubro(comboRubro.getSelectedItem().toString()));
         if(id_<0)
         {
             JOptionPane.showMessageDialog(null,"Se produjo un error al cargar el egreso.", "Atención",JOptionPane.ERROR_MESSAGE);
@@ -331,6 +349,9 @@ private void unlinkIngressOrEgressAndOperation()
         jScrollPane1 = new javax.swing.JScrollPane();
         fieldConcept = new javax.swing.JTextArea();
         jSeparator3 = new javax.swing.JSeparator();
+        jSeparator4 = new javax.swing.JSeparator();
+        comboRubro = new javax.swing.JComboBox<>();
+        labelRubro = new javax.swing.JLabel();
         buttonRemovePayment = new javax.swing.JButton();
         buttonAddPayment1 = new javax.swing.JButton();
         buttonEdit = new javax.swing.JButton();
@@ -399,6 +420,10 @@ private void unlinkIngressOrEgressAndOperation()
         fieldConcept.setRows(5);
         jScrollPane1.setViewportView(fieldConcept);
 
+        comboRubro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        labelRubro.setText("Rubro");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -419,15 +444,21 @@ private void unlinkIngressOrEgressAndOperation()
                                 .addComponent(buttonRegister)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(buttonExit))))
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelPayments)
                             .addComponent(labelConcepto)
                             .addComponent(DateOfPay, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelDateOfPayment))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSeparator3))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelRubro)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jSeparator4)
+                            .addComponent(comboRubro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -438,18 +469,24 @@ private void unlinkIngressOrEgressAndOperation()
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(DateOfPay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(labelConcepto)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelConcepto)
+                    .addComponent(labelRubro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(labelPayments)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 25, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelTotal)
                     .addComponent(fieldTotalPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -534,6 +571,11 @@ private void unlinkIngressOrEgressAndOperation()
             JOptionPane.showMessageDialog(null,"Ingrese el tipo de pago.", "Faltan datos",JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if(type == 2 && comboRubro.getSelectedItem() == null)
+        {
+            JOptionPane.showMessageDialog(null,"Seleccione el rubro.", "Faltan datos",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         //Registro el egreso o el ingreso de acuerdo a que corresponda
         switch(type)
@@ -595,6 +637,7 @@ private void unlinkIngressOrEgressAndOperation()
     private javax.swing.JButton buttonExit;
     private javax.swing.JButton buttonRegister;
     private javax.swing.JButton buttonRemovePayment;
+    private javax.swing.JComboBox<String> comboRubro;
     private javax.swing.JTextArea fieldConcept;
     private javax.swing.JTextField fieldTotalPayment;
     private javax.swing.JPanel jPanel1;
@@ -602,9 +645,11 @@ private void unlinkIngressOrEgressAndOperation()
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JLabel labelConcepto;
     private javax.swing.JLabel labelDateOfPayment;
     private javax.swing.JLabel labelPayments;
+    private javax.swing.JLabel labelRubro;
     private javax.swing.JLabel labelTotal;
     private javax.swing.JTable tablePayment;
     // End of variables declaration//GEN-END:variables
