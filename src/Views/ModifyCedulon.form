@@ -252,6 +252,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="fieldTotal">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fieldTotalActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="buttonValidate">
           <Properties>

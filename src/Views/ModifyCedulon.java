@@ -233,6 +233,12 @@ public class ModifyCedulon extends javax.swing.JInternalFrame {
 
         labelSurcharge.setText("Total");
 
+        fieldTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldTotalActionPerformed(evt);
+            }
+        });
+
         buttonValidate.setText("Validar");
         buttonValidate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -391,7 +397,7 @@ public class ModifyCedulon extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(1, 1, 1))
         );
 
@@ -442,6 +448,10 @@ public class ModifyCedulon extends javax.swing.JInternalFrame {
     private void newCedulonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCedulonActionPerformed
         clean();
     }//GEN-LAST:event_newCedulonActionPerformed
+
+    private void fieldTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldTotalActionPerformed
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonExit;

@@ -444,22 +444,28 @@ public String getActualDateInString ()
 
     }
     
-    public Object [][] TemporalFilterIngress(String month, String year, boolean [] filter)
+    public Object [][] TemporalFilterIngress(String month, String year, String cedulon, String id_ingress, boolean [] filter)
     {
             Object [][] ingress;
             switch(Arrays.toString(filter))
             {
-                case "[false, false]":
+                case "[false, false, false, false]":
                 ingress = temporalGetIngress(" ORDER BY fecha DESC");   
                 return ingress;
-                case "[false, true]":
+                case "[false, true, false, false]":
                 ingress = temporalGetIngress(" where YEAR(fecha) = '"+ year +"' ORDER BY fecha DESC");
                 return ingress;
-                case "[true, true]":
+                case "[true, true, false, false]":
                 ingress = temporalGetIngress(" where YEAR(fecha) = '"+ year +"' and MONTH(fecha) = '"+month+"' ORDER BY fecha DESC");
                 return ingress;
+                case "[false, false, true, false]":
+                ingress = temporalGetIngress(" LEFT JOIN cedulon ON ingress.id_ingreso = cedulon.cod_ingreso where id_cedulon = '"+cedulon+"' ");
+                return ingress;
+                case "[false, false, false, true]":
+                ingress = temporalGetIngress(" where id_ingreso = '"+ id_ingress +"'");
+                return ingress;
                 default:
-                ingress = temporalGetIngress("");
+                ingress = temporalGetIngress(" ");
                 return ingress;
             }
     }

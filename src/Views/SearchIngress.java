@@ -46,6 +46,8 @@ public void init ()
     initComponents();
     comboYear.setEnabled(false);
     comboMonth.setEnabled(false);
+    textCedulon.setEnabled(false);
+    textIngress.setEnabled(false);
     filterTable();
         
 //    this.ActListener = new PropertyChangeListener() {
@@ -97,14 +99,26 @@ public void init ()
     
     public void filterTable()
     {
-        boolean[] filter = {boxMonth.isSelected(), boxYear.isSelected()};
-        String fieldYear, fieldMonth;
+//        boolean[] filter = {boxMonth.isSelected(), boxYear.isSelected()};
+//        String fieldYear, fieldMonth;
+//        setTitletable(filter);
+//        fieldMonth = String.valueOf(comboMonth.getMonth()+1);
+//        fieldYear = String.valueOf(comboYear.getYear());
+//        
+//        tableDate = af.TemporalFilterIngress(fieldMonth, fieldYear, filter);
+//        generateTableData(tableDate);
+        
+        boolean[] filter = {boxMonth.isSelected(), boxYear.isSelected(), boxCedulon.isSelected(), boxIngress.isSelected()};
+        String fieldYear, fieldMonth, fieldCedulon, fieldIngress;
         setTitletable(filter);
         fieldMonth = String.valueOf(comboMonth.getMonth()+1);
         fieldYear = String.valueOf(comboYear.getYear());
-        
-        tableDate = af.TemporalFilterIngress(fieldMonth, fieldYear, filter);
+        fieldCedulon = textCedulon.getText();
+        fieldIngress = textIngress.getText();
+                
+        tableDate = af.TemporalFilterIngress(fieldMonth, fieldYear, fieldCedulon, fieldIngress, filter);
         generateTableData(tableDate);
+        
     }
     private void generateTableData(Object [][] datostabla)
     {    
@@ -198,6 +212,10 @@ public void init ()
         buttonGenerateExcel = new javax.swing.JButton();
         comboYear = new com.toedter.calendar.JYearChooser();
         buttonDelete = new javax.swing.JButton();
+        boxCedulon = new javax.swing.JCheckBox();
+        textCedulon = new javax.swing.JTextField();
+        boxIngress = new javax.swing.JCheckBox();
+        textIngress = new javax.swing.JTextField();
 
         setTitle("Listar ingresos");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/listIncome16.png"))); // NOI18N
@@ -263,6 +281,32 @@ public void init ()
             }
         });
 
+        boxCedulon.setText("Nº de cedulon");
+        boxCedulon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxCedulonActionPerformed(evt);
+            }
+        });
+
+        textCedulon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textCedulonActionPerformed(evt);
+            }
+        });
+
+        boxIngress.setText("Nº de ingreso");
+        boxIngress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxIngressActionPerformed(evt);
+            }
+        });
+
+        textIngress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textIngressActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -289,13 +333,23 @@ public void init ()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(boxMonth)
-                                .addGap(79, 79, 79)
-                                .addComponent(boxYear))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(128, 128, 128)
-                                .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(boxMonth)
+                                        .addGap(79, 79, 79)
+                                        .addComponent(boxYear))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(128, 128, 128)
+                                        .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(32, 32, 32)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textCedulon, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(boxCedulon))
+                                .addGap(32, 32, 32)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(boxIngress)
+                                    .addComponent(textIngress, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 151, Short.MAX_VALUE)))
                 .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
@@ -310,14 +364,19 @@ public void init ()
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(boxMonth)
-                            .addComponent(boxYear))
+                            .addComponent(boxYear)
+                            .addComponent(boxCedulon)
+                            .addComponent(boxIngress))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buttonFilter)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(buttonFilter)
+                                .addComponent(textCedulon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textIngress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(comboMonth, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(comboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ButtonExit)
@@ -337,22 +396,39 @@ public void init ()
             boxYear.setEnabled(false);
             boxYear.setSelected(true);
             comboYear.setEnabled(true);
+            boxCedulon.setSelected(false);
+            textCedulon.setEnabled(false);
+            textCedulon.setText("");
+            boxIngress.setSelected(false);
+            textIngress.setEnabled(false);
+            textIngress.setText("");
             
         }
-        else
+        else  
         {
             comboMonth.setEnabled(false);
             boxYear.setEnabled(false);
             boxYear.setSelected(false);
             boxYear.setEnabled(true);
             comboYear.setEnabled(false);
-        }
+            boxCedulon.setSelected(false);
+            textCedulon.setEnabled(false);
+            boxIngress.setSelected(false);
+            textIngress.setEnabled(false);
+        }        
     }//GEN-LAST:event_boxMonthActionPerformed
 
     private void boxYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxYearActionPerformed
         if(boxYear.isSelected())
         { 
             comboYear.setEnabled(true);
+            boxYear.setEnabled(true);
+            boxCedulon.setSelected(false);
+            textCedulon.setEnabled(false);
+            textCedulon.setText("");
+            boxIngress.setSelected(false);
+            textIngress.setEnabled(false);
+            textIngress.setText("");
         }
         else
         {
@@ -362,6 +438,8 @@ public void init ()
 
     private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
         filterTable();
+        if(tableIngress.getRowCount() == 0)
+            JOptionPane.showMessageDialog(null,"La busqueda no arrojo ningun resultado","Atención",JOptionPane.WARNING_MESSAGE); 
     }//GEN-LAST:event_buttonFilterActionPerformed
 
     private void ButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExitActionPerformed
@@ -393,21 +471,27 @@ public void init ()
         int month = comboMonth.getMonth()+1;
         int year = comboYear.getYear();
         
-        if(boxMonth.isSelected())
-            data = af.getTemporalDetailedIngress(" where YEAR(fecha) = '"+ year +"' and MONTH(fecha) = '"+month+"' ORDER BY fecha DESC");
-        else if(boxYear.isSelected() && !boxMonth.isSelected()) 
-            data = af.getTemporalDetailedIngress(" where YEAR(fecha) = '"+ year +"' ORDER BY fecha DESC");
+        if(boxCedulon.isSelected() || boxIngress.isSelected())
+            JOptionPane.showMessageDialog(null,"Para generar excel debe filtrar por fecha \n o no debe haber filtros aplicados.","Atención",JOptionPane.WARNING_MESSAGE);
         else
-            data = af.getTemporalDetailedIngress(" ORDER BY fecha DESC");
-        
-        String [] columns = {"Id ingreso", "Fecha", "Concepto", "Modalidad", "Detalle", "Importe"};
-        SaveExcelFile file = new SaveExcelFile(title+"-"+af.getActualDateInString());
-        GenerateXls xls = new GenerateXls(data, columns, title, 1);
-        String route = file.getRoute();
-        if(route != null)
         {
-                xls.generate(route);
-        }       
+            if(boxMonth.isSelected())
+                data = af.getTemporalDetailedIngress(" where YEAR(fecha) = '"+ year +"' and MONTH(fecha) = '"+month+"' ORDER BY fecha DESC");
+            else if(boxYear.isSelected() && !boxMonth.isSelected()) 
+                data = af.getTemporalDetailedIngress(" where YEAR(fecha) = '"+ year +"' ORDER BY fecha DESC");
+            else
+                data = af.getTemporalDetailedIngress(" ORDER BY fecha DESC");
+
+            String [] columns = {"Id ingreso", "Fecha", "Concepto", "Modalidad", "Detalle", "Importe"};
+            SaveExcelFile file = new SaveExcelFile(title+"-"+af.getActualDateInString());
+            GenerateXls xls = new GenerateXls(data, columns, title, 1);
+            String route = file.getRoute();
+            if(route != null)
+            {
+                    xls.generate(route);
+            }      
+        }
+     
     }//GEN-LAST:event_buttonGenerateExcelActionPerformed
 
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
@@ -431,8 +515,95 @@ public void init ()
         }
     }//GEN-LAST:event_buttonDeleteActionPerformed
 
+    private void boxCedulonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxCedulonActionPerformed
+        if(boxCedulon.isSelected())
+        {
+            textCedulon.setEnabled(true);
+            
+            comboMonth.setEnabled(false);
+            boxMonth.setEnabled(true);
+            boxMonth.setSelected(false);
+            
+            comboYear.setEnabled(false);
+            boxYear.setSelected(false);      
+            boxYear.setEnabled(true);
+            
+            textIngress.setEnabled(false);
+            boxIngress.setEnabled(true);
+            boxIngress.setSelected(false);
+            textIngress.setText("");
+        }
+        else
+        {
+            textCedulon.setText("");
+            textCedulon.setEnabled(false);
+            
+            comboMonth.setEnabled(false);
+            boxMonth.setEnabled(true);
+            boxMonth.setSelected(false);
+            
+            comboYear.setEnabled(false);
+            boxYear.setSelected(false);         
+            boxYear.setEnabled(true);
+            
+            textIngress.setEnabled(false);
+            boxIngress.setEnabled(true);
+            boxIngress.setSelected(false);
+            textIngress.setText("");
+        }
+    }//GEN-LAST:event_boxCedulonActionPerformed
+
+    private void textCedulonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textCedulonActionPerformed
+        buttonFilter.requestFocus();
+    }//GEN-LAST:event_textCedulonActionPerformed
+
+    private void textIngressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textIngressActionPerformed
+        buttonFilter.requestFocus();
+    }//GEN-LAST:event_textIngressActionPerformed
+
+    private void boxIngressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxIngressActionPerformed
+        if(boxIngress.isSelected())
+        {
+            textIngress.setEnabled(true);
+            
+            comboMonth.setEnabled(false);
+            boxMonth.setEnabled(true);
+            boxMonth.setSelected(false);
+            
+            comboYear.setEnabled(false);
+            boxYear.setSelected(false);      
+            boxYear.setEnabled(true);
+            
+            textCedulon.setEnabled(false);
+            boxCedulon.setEnabled(true);
+            boxCedulon.setSelected(false);
+            textCedulon.setText("");
+        }
+        else
+        {
+            textIngress.setText("");
+            textIngress.setEnabled(false);
+            
+            comboMonth.setEnabled(false);
+            boxMonth.setEnabled(true);
+            boxMonth.setSelected(false);
+            
+            comboYear.setEnabled(false);
+            boxYear.setSelected(false);         
+            boxYear.setEnabled(true);
+            
+            textCedulon.setEnabled(false);
+            boxCedulon.setEnabled(true);
+            boxCedulon.setSelected(false);
+            textCedulon.setText("");
+        }
+        
+    }//GEN-LAST:event_boxIngressActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ButtonExit;
+    private javax.swing.JCheckBox boxCedulon;
+    private javax.swing.JCheckBox boxIngress;
     private javax.swing.JCheckBox boxMonth;
     private javax.swing.JCheckBox boxYear;
     private javax.swing.JButton buttonDelete;
@@ -445,5 +616,7 @@ public void init ()
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tableIngress;
+    private javax.swing.JTextField textCedulon;
+    private javax.swing.JTextField textIngress;
     // End of variables declaration//GEN-END:variables
 }

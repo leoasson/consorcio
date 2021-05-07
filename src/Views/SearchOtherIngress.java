@@ -325,6 +325,8 @@ public void init ()
 
     private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
         filterTable();
+        if(tableIngress.getRowCount() == 0)
+            JOptionPane.showMessageDialog(null,"La busqueda no arrojo ningun resultado","Atención",JOptionPane.WARNING_MESSAGE); 
     }//GEN-LAST:event_buttonFilterActionPerformed
 
     private void ButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonExitActionPerformed
