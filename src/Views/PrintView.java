@@ -18,14 +18,19 @@ public class PrintView extends javax.swing.JInternalFrame {
         comboPeriod.setEnabled(false);
         buttonPrint.setEnabled(false);
         fieldCedulon.setEnabled(false);
-        String [] period = {"Ingresar periodo","01/2018","02/2018", "01/2019", "02/2019", "01/2020","02/2020" };
+        completeComboPeriod();
+    }
+
+    private void completeComboPeriod()
+    {
+        String [] period = af.getPeriod();
         comboPeriod.removeAllItems();
         for (String period1 : period) 
         {
             comboPeriod.addItem(period1);
         }
     }
-
+    
     public void setFields(String idCed)
     {
     try
@@ -91,6 +96,11 @@ public class PrintView extends javax.swing.JInternalFrame {
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/print16.png"))); // NOI18N
 
         comboPeriod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboPeriod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboPeriodActionPerformed(evt);
+            }
+        });
 
         fieldCedulon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,6 +264,10 @@ public class PrintView extends javax.swing.JInternalFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         main.addSearchCedulon(this);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void comboPeriodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPeriodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboPeriodActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton RadioButtonNCedulon;
